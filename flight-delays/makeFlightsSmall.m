@@ -1,3 +1,5 @@
+%% MATLAB script for creating the small sample file
+
 %% Create datastore
 ds = datastore('flights.csv');
 ds.SelectedFormats = {'%d' ... % YEAR 
