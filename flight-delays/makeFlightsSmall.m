@@ -37,11 +37,26 @@ ds.SelectedFormats = {'%d' ... % YEAR
 %% Create tall array
 dstall = tall(ds);
 
-%% Sample and gather
+%% Create small random sampled subset
+% Sample and gather
 [flightssmall,ismall] = datasample(dstall,100000,'Replace',false);
 flightssmall = gather(flightssmall);
 
-%% Write out file
-% write('fligthssmall.csv',flightssmall)
-
+% Write out file
 writetable(flightssmall,'flightssmall.csv')
+
+%% Break all samples into 10 files
+nfiles = 10;
+nsamples = gather(height(dstall));
+nloop = round(nsamples/nfiles);
+
+for ifile = 0:nfiles-1
+    istart = ifile*nloop + 1;
+    iend = istart + nloop - 1;
+    if iend > nsamples
+        flightloop = gather(dstall(istart:end,:));
+    else
+        flightloop = gather(dstall(istart:iend,:));
+    end
+    writetable(flightloop,['flights' num2str(ifile) '.csv'])
+end
